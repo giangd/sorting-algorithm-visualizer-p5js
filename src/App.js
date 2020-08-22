@@ -11,32 +11,32 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            color: [
-                Math.random() * 255,
-                Math.random() * 255,
-                Math.random() * 255,
-            ],
-            speed: 5,
+            speed: 1,
+            numBars: 20,
+            randomArray: [],
+            canvasWidth: 300,
+            canvasHeight: 200,
         };
         // this.randomColor = this.randomColor.bind(this);
     }
 
-    randomColor = () => {
+    handleChange = (event) => {
         this.setState({
-            color: [
-                Math.random() * 255,
-                Math.random() * 255,
-                Math.random() * 255,
-            ],
+            [event.target.id]: Number(event.target.value),
         });
     };
 
-    handleChange = (event) => {
-        console.log("change");
-        this.setState({
-            [event.target.id]: event.target.value,
+    componentDidMount() {
+        const newRandomArray = [];
+        for (let i = 0; i < this.state.numBars; i++) {
+            newRandomArray.push(Math.floor(Math.random() * 100));
+        }
+        this.setState((prevState) => {
+            return {
+                randomArray: newRandomArray,
+            };
         });
-    };
+    }
 
     render() {
         return (
@@ -55,9 +55,18 @@ class App extends React.Component {
                 <P5Wrapper
                     sketch={bubbleSketch}
                     speed={this.state.speed}
+                    randomArray={this.state.randomArray}
+                    canvasWidth={this.state.canvasWidth}
+                    canvasHeight={this.state.canvasHeight}
                 ></P5Wrapper>
                 <P5Wrapper sketch={heapSketch}></P5Wrapper>
-                <P5Wrapper sketch={insertionSketch}></P5Wrapper>
+                <P5Wrapper
+                    sketch={insertionSketch}
+                    speed={this.state.speed}
+                    randomArray={this.state.randomArray}
+                    canvasWidth={this.state.canvasWidth}
+                    canvasHeight={this.state.canvasHeight}
+                ></P5Wrapper>
                 <P5Wrapper sketch={mergeSketch}></P5Wrapper>
                 <P5Wrapper sketch={selectionSketch}></P5Wrapper>
             </div>

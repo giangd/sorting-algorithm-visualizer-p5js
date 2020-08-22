@@ -9,50 +9,20 @@ export default function sketch(p) {
     };
     let bars = [];
     let barsCopy = [];
-
     let numBars = 20;
     let animation = [];
 
+    let randomArray = [];
+    let arrayFilled = false;
+
+    let canvasWidth;
+    let canvasHeight;
+
     p.setup = () => {
-        canvas = p.createCanvas(300, 200);
-        for (let i = 0; i < numBars; i++) {
-            bars.push(
-                createBar(p, p.random(0, 100), i, numBars, colors.normalColor)
-            );
-            barsCopy.push(bars[bars.length - 1]);
-        }
+        // p.randomSeed(1);
+        canvas = p.createCanvas(canvasWidth, canvasHeight);
 
-        // sort the bars array and use it as a template to add animations
-        for (let i = 0; i < numBars; i++) {
-            for (let j = 0; j < numBars - i - 1; j++) {
-                animation.push({
-                    colorInspecting: j,
-                });
-                if (bars[j].value > bars[j + 1].value) {
-                    animation.push({
-                        colorSwap: [j, j + 1],
-                    });
-                    animation.push({
-                        swap: j,
-                    });
-                    animation.push({
-                        colorUnswap: [j, j + 1],
-                    });
-
-                    const tempBar = bars[j];
-                    bars[j] = bars[j + 1];
-
-                    bars[j + 1] = tempBar;
-                } else {
-                    animation.push({
-                        colorUninspecting: j,
-                    });
-                }
-            }
-        }
-
-        // console.log(animation);
-        p.frameRate(5);
+        p.frameRate(1);
     };
 
     function stepThroughAnimation(frameCount, bars) {
@@ -96,19 +66,77 @@ export default function sketch(p) {
         }
 
         for (let i = 0; i < numBars; i++) {
-            barsCopy[i].index = i; // always update the bar's index before calling show()
-            barsCopy[i].show();
+            // console.log(barsCopy[i]);
+            bars[i].index = i; // always update the bar's index before calling show()
+            bars[i].show();
         }
     }
 
     p.draw = () => {
+        // console.log("drew");
         p.background("#BDD5EA");
-        stepThroughAnimation(p.frameCount - 1, barsCopy);
+        if (arrayFilled) {
+            stepThroughAnimation(p.frameCount - 1, barsCopy);
+        }
+
+        p.textSize(10);
+        p.fill(0);
+        p.text(p.round(p.getFrameRate()), 5, 10);
     };
 
     p.myCustomRedrawAccordingToNewPropsHandler = (props) => {
         if (canvas) {
-            p.setFrameRate(Number(props.speed));
+            p.setFrameRate(props.speed);
+        }
+        if (!arrayFilled && props.randomArray.length > 0) {
+            canvasWidth = props.canvasWidth;
+            canvasHeight = props.canvasHeight;
+            randomArray = props.randomArray;
+
+            arrayFilled = true;
+            for (let i = 0; i < numBars; i++) {
+                bars.push(
+                    createBar(
+                        p,
+                        randomArray[i],
+                        i,
+                        numBars,
+                        colors.normalColor,
+                        canvasWidth,
+                        canvasHeight
+                    )
+                );
+                barsCopy.push(bars[bars.length - 1]);
+            }
+
+            // sort the bars array and use it as a template to add animations
+            for (let i = 0; i < numBars; i++) {
+                for (let j = 0; j < numBars - i - 1; j++) {
+                    animation.push({
+                        colorInspecting: j,
+                    });
+                    if (bars[j].value > bars[j + 1].value) {
+                        animation.push({
+                            colorSwap: [j, j + 1],
+                        });
+                        animation.push({
+                            swap: j,
+                        });
+                        animation.push({
+                            colorUnswap: [j, j + 1],
+                        });
+
+                        const tempBar = bars[j];
+                        bars[j] = bars[j + 1];
+
+                        bars[j + 1] = tempBar;
+                    } else {
+                        animation.push({
+                            colorUninspecting: j,
+                        });
+                    }
+                }
+            }
         }
     };
 }
