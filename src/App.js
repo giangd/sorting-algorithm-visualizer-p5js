@@ -68,7 +68,13 @@ class App extends React.Component {
                     canvasHeight={this.state.canvasHeight}
                 ></P5Wrapper>
                 <P5Wrapper sketch={mergeSketch}></P5Wrapper>
-                <P5Wrapper sketch={selectionSketch}></P5Wrapper>
+                <P5Wrapper
+                    sketch={selectionSketch}
+                    speed={this.state.speed}
+                    randomArray={this.state.randomArray}
+                    canvasWidth={this.state.canvasWidth}
+                    canvasHeight={this.state.canvasHeight}
+                ></P5Wrapper>
             </div>
         );
     }

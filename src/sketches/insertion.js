@@ -127,7 +127,6 @@ export default function sketch(p) {
                     animation.push({
                         colorUnswap: [j, j - 1],
                     });
-                    console.log("swapped");
                     [bars[j], bars[j - 1]] = [bars[j - 1], bars[j]];
                     j = j - 1;
                 }
@@ -135,7 +134,6 @@ export default function sketch(p) {
                     colorUninspecting: j,
                 });
             }
-            console.log(bars);
 
             // sort the bars array and use it as a template to add animations
             // for (let i = 0; i < numBars; i++) {
