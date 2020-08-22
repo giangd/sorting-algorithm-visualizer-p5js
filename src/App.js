@@ -16,7 +16,7 @@ class App extends React.Component {
                 Math.random() * 255,
                 Math.random() * 255,
             ],
-            speed: 1,
+            speed: 5,
         };
         // this.randomColor = this.randomColor.bind(this);
     }
@@ -45,6 +45,7 @@ class App extends React.Component {
                     type="range"
                     min="1"
                     max="60"
+                    step="1"
                     id="speed"
                     onChange={this.handleChange}
                     value={this.state.speed}
