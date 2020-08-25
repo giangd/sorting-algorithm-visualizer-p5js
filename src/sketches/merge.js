@@ -36,45 +36,56 @@ export default function sketch(p) {
             return;
         }
 
-        if ("colorInspecting" in animation[frameCount]) {
-            // console.log(`color inspecting`);
-            let j = animation[frameCount].colorInspecting;
-            bars[j].color = colors.inspectingColor;
-            // bars[j + 1].color = colors.inspectingColor;
-        } else if ("colorUninspecting" in animation[frameCount]) {
-            // console.log(`color uninspecting`);
-            let j = animation[frameCount].colorUninspecting;
-            bars[j].color = colors.normalColor;
-            // bars[j + 1].color = colors.normalColor;
-        } else if ("colorSwap" in animation[frameCount]) {
-            // console.log(`colorSwap ${animation[frameCount].colorSwap}`);
+        if ("colorMergeMarkers" in animation[frameCount]) {
+            let [beginIndex1, beginIndex2] = animation[
+                frameCount
+            ].colorMergeMarkers;
 
-            // let i1, i2;
-            let [i1, i2] = animation[frameCount].colorSwap;
-            // console.log(`colorSwap: ${i1}, ${i2}`);
-            bars[i1].color = colors.swapColor;
-            bars[i2].color = colors.swapColor;
-            // [bars[i1], bars[i2]] = [bars[i2], bars[i1]];
-        } else if ("swap" in animation[frameCount]) {
-            let [j, minIndex] = animation[frameCount].swap;
+            bars[beginIndex1].color = colors.swapColor;
+            bars[beginIndex2].color = colors.swapColor;
 
-            // console.log(`swap: ${j}`);
-            [bars[j], bars[minIndex]] = [bars[minIndex], bars[j]];
-        } else if ("colorUnswap" in animation[frameCount]) {
-            let [i1, i2] = animation[frameCount].colorUnswap;
-            // console.log(`colorUnswap: ${i1}, ${i2}`);
-            bars[i1].color = colors.normalColor;
-            bars[i2].color = colors.normalColor;
-        } else if ("colorIndexMin" in animation[frameCount]) {
-            let i1 = animation[frameCount].colorIndexMin;
-            // console.log(`colorUnswap: ${i1}, ${i2}`);
-            bars[i1].color = colors.swapColor;
-        } else if ("colorUnindexMin" in animation[frameCount]) {
-            let i1 = animation[frameCount].colorUnindexMin;
-            // console.log(`colorUnswap: ${i1}, ${i2}`);
-            bars[i1].color = colors.normalColor;
+            // console.log(beginIndex1, beginIndex2);
+        } else if ("unColorMergeMarkers" in animation[frameCount]) {
+            let [beginIndex1, beginIndex2] = animation[
+                frameCount
+            ].unColorMergeMarkers;
+
+            bars[beginIndex1].color = colors.normalColor;
+            bars[beginIndex2].color = colors.normalColor;
+
+            // console.log(beginIndex1, beginIndex2);
+        } else if ("merge" in animation[frameCount]) {
+            let [beginIndex1, C] = animation[frameCount].merge;
+            // console.log("merge");
+            // console.log(beginIndex1);
+            // console.log(C);
+            bars.splice(beginIndex1, C.length, ...C);
+        } else if ("colorInspect" in animation[frameCount]) {
+            let [index1, index2] = animation[frameCount].colorInspect;
+            // console.log(index1, index2);
+            if (index1 !== undefined) {
+                bars[index1].color = colors.inspectingColor;
+            }
+            if (index2 !== undefined) {
+                bars[index2].color = colors.inspectingColor;
+            }
+        } else if ("unColorInspect" in animation[frameCount]) {
+            let [index1, index2] = animation[frameCount].unColorInspect;
+            // console.log(index1, index2);
+            if (index1 !== undefined) {
+                bars[index1].color = colors.normalColor;
+            }
+            if (index2 !== undefined) {
+                bars[index2].color = colors.normalColor;
+            }
         }
 
+        // colorInspect: [indexA, indexB];
+
+        // animation.push({
+        //     merge: [beginIndex1, C],
+        // });
+        // array.splice(beginIndex1, C.length, ...C);
         for (let i = 0; i < numBars; i++) {
             bars[i].index = i; // always update the bar's index before calling show()
             bars[i].show();
@@ -86,11 +97,11 @@ export default function sketch(p) {
         p.background("#BDD5EA");
 
         if (arrayFilled) {
-            // stepThroughAnimation(p.frameCount - 1, barsCopy);
-            for (let i = 0; i < numBars; i++) {
-                bars[i].index = i; // always update the bar's index before calling show()
-                bars[i].show();
-            }
+            stepThroughAnimation(p.frameCount - 1, barsCopy);
+            // for (let i = 0; i < numBars; i++) {
+            // bars[i].index = i; // always update the bar's index before calling show()
+            // bars[i].show();
+            // }
         }
         p.textSize(10);
         p.fill(0);
@@ -141,12 +152,14 @@ export default function sketch(p) {
                 );
                 barsCopy.push(bars[bars.length - 1]);
             }
-            console.log("before:");
+            // console.log("before:");
             // console.log(bars);
 
             // sort the bars array and use it as a template to add animations
             animation.push({});
             formGroups(bars);
+            // console.log(bars);
+            // console.log(animation);
             /*
             merge 2 = 1
             0  1
@@ -189,7 +202,7 @@ export default function sketch(p) {
         let arrayCopy = [];
 
         while (!(groupSize >= array.length)) {
-            console.log(`   begin groupSize: ${groupSize}`);
+            // console.log(`   begin groupSize: ${groupSize}`);
             const indices = [];
             for (
                 let numTimesLoop = 0;
@@ -208,27 +221,20 @@ export default function sketch(p) {
                     endIndex: endIndex,
                 });
 
-                console.log(`beginIndex: ${beginIndex} endIndex: ${endIndex}`);
+                // console.log(`beginIndex: ${beginIndex} endIndex: ${endIndex}`);
                 // if (groupSize >= array.length) {
                 //     console.log(`DONE!`);
                 // }
             }
-            console.log(indices);
+            // console.log(indices);
 
             for (let i = 0; i < indices.length; i++) {
                 if (!(i + 1 < indices.length)) {
                     break;
                 }
 
-                console.log(
-                    `merging indices: (${indices[i].beginIndex}, ${
-                        indices[i].endIndex
-                    }) and (${indices[i + 1].beginIndex}, ${
-                        indices[i + 1].endIndex
-                    })`
-                );
-
                 // call merge function
+
                 merge(
                     array,
                     indices[i].beginIndex,
@@ -236,26 +242,12 @@ export default function sketch(p) {
                     indices[i + 1].beginIndex,
                     indices[i + 1].endIndex
                 );
-                // console.log(array);
+
                 i++;
             }
-
-            console.log(`   end groupSize: ${groupSize}
-            `);
+            // console.log("-------------------------------");
             groupSize *= 2;
         }
-
-        // for (let i = 0; i < 6; i++) {
-        //     console.log(`i: ${i}`);
-        // }
-
-        // console.log(
-        //     `array.length: ${
-        //         array.length
-        //     }, groupSize: ${groupSize}, i < ${Math.ceil(
-        //         array.length / groupSize
-        //     )}`
-        // );
     }
 
     function merge(array, beginIndex1, endIndex1, beginIndex2, endIndex2) {
@@ -265,14 +257,43 @@ export default function sketch(p) {
         let k = 0;
         let A = array.slice(beginIndex1, endIndex1);
         let B = array.slice(beginIndex2, endIndex2);
-        console.log(`
-begin merge()`);
+        // todo: color merge markers
+        animation.push({
+            colorMergeMarkers: [beginIndex1, beginIndex2],
+        });
 
-        console.log(
-            `merging indices: (${beginIndex1}, ${endIndex1}) and (${beginIndex2}, ${endIndex2})`
-        );
-        console.log(A);
-        console.log(B);
+        // if (A.length !== B.length) {
+        //     if (A.length > B.length) {
+
+        //     } else {
+
+        //     }
+        // } else {
+        let loopEndCondition = A.length >= B.length ? A.length : B.length;
+        for (let i = 1; i < loopEndCondition; i++) {
+            let indexA = beginIndex1 + i;
+            let indexB = beginIndex2 + i;
+
+            if (indexA >= endIndex1) {
+                indexA = undefined;
+                // console.log("A");
+            }
+            if (indexB >= endIndex2) {
+                indexB = undefined;
+                // console.log("B");
+            }
+            // console.log("   " + indexA, indexB);
+
+            animation.push({
+                colorInspect: [indexA, indexB],
+            });
+            animation.push({
+                unColorInspect: [indexA, indexB],
+            });
+        }
+
+        // console.log("");
+        // }
 
         let C = [];
 
@@ -290,14 +311,13 @@ begin merge()`);
             C[k++] = B[j];
         }
 
-        // todo: check if it is correctly replacing the old contents
+        animation.push({
+            unColorMergeMarkers: [beginIndex1, beginIndex2],
+        });
 
-        console.log(C);
+        animation.push({
+            merge: [beginIndex1, C],
+        });
         array.splice(beginIndex1, C.length, ...C);
-        console.log("result:");
-        console.log(array);
-        console.log(`end merge
-        `);
-        return C;
     }
 }

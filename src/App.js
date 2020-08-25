@@ -13,7 +13,7 @@ class App extends React.Component {
         this.state = {
             speed: 1,
             // numBars: 20,
-            numBars: 13,
+            numBars: 50,
             randomArray: [],
             canvasWidth: 300,
             canvasHeight: 200,
