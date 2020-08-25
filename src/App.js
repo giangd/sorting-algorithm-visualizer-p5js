@@ -12,10 +12,12 @@ class App extends React.Component {
         super();
         this.state = {
             speed: 1,
-            numBars: 20,
+            // numBars: 20,
+            numBars: 13,
             randomArray: [],
             canvasWidth: 300,
             canvasHeight: 200,
+            isPlaying: false,
         };
         // this.randomColor = this.randomColor.bind(this);
     }
@@ -23,6 +25,14 @@ class App extends React.Component {
     handleChange = (event) => {
         this.setState({
             [event.target.id]: Number(event.target.value),
+        });
+    };
+
+    handleClick = (event) => {
+        this.setState((prevState) => {
+            return {
+                isPlaying: !prevState.isPlaying,
+            };
         });
     };
 
@@ -39,6 +49,7 @@ class App extends React.Component {
     }
 
     render() {
+        let buttonText = this.state.isPlaying ? "Pause" : "Play";
         return (
             <div>
                 <input
@@ -50,31 +61,13 @@ class App extends React.Component {
                     onChange={this.handleChange}
                     value={this.state.speed}
                 />
-                <button onClick={this.randomColor}>Random Color</button>
+                <button onClick={this.handleClick}>{buttonText}</button>
                 <P5Wrapper sketch={sketch} color={this.state.color}></P5Wrapper>
-                <P5Wrapper
-                    sketch={bubbleSketch}
-                    speed={this.state.speed}
-                    randomArray={this.state.randomArray}
-                    canvasWidth={this.state.canvasWidth}
-                    canvasHeight={this.state.canvasHeight}
-                ></P5Wrapper>
+                <P5Wrapper sketch={bubbleSketch} {...this.state}></P5Wrapper>
                 <P5Wrapper sketch={heapSketch}></P5Wrapper>
-                <P5Wrapper
-                    sketch={insertionSketch}
-                    speed={this.state.speed}
-                    randomArray={this.state.randomArray}
-                    canvasWidth={this.state.canvasWidth}
-                    canvasHeight={this.state.canvasHeight}
-                ></P5Wrapper>
-                <P5Wrapper sketch={mergeSketch}></P5Wrapper>
-                <P5Wrapper
-                    sketch={selectionSketch}
-                    speed={this.state.speed}
-                    randomArray={this.state.randomArray}
-                    canvasWidth={this.state.canvasWidth}
-                    canvasHeight={this.state.canvasHeight}
-                ></P5Wrapper>
+                <P5Wrapper sketch={insertionSketch} {...this.state}></P5Wrapper>
+                <P5Wrapper sketch={mergeSketch} {...this.state}></P5Wrapper>
+                <P5Wrapper sketch={selectionSketch} {...this.state}></P5Wrapper>
             </div>
         );
     }

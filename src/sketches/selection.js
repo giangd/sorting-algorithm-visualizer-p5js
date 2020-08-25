@@ -99,14 +99,34 @@ export default function sketch(p) {
 
     p.myCustomRedrawAccordingToNewPropsHandler = (props) => {
         if (canvas) {
-            p.setFrameRate(props.speed);
+            // runs during any change
+            p.setFrameRate(props.speed); // updated by slider
+            if (props.isPlaying) {
+                // updated by play/pause button
+                // console.log("play");
+                p.loop();
+            } else {
+                // console.log("pause");
+                p.noLoop();
+            }
         }
         if (!arrayFilled && props.randomArray.length > 0) {
-            canvasWidth = props.canvasWidth;
+            // runs during componentDidMount
+            if (props.isPlaying) {
+                // make sure sketch is in sync with play/pause button at start
+                // console.log("play");
+                p.loop();
+            } else {
+                // console.log("pause");
+                p.noLoop();
+            }
+
+            canvasWidth = props.canvasWidth; // sync local variables
             canvasHeight = props.canvasHeight;
             randomArray = props.randomArray;
-
+            numBars = props.numBars;
             arrayFilled = true;
+
             for (let i = 0; i < numBars; i++) {
                 bars.push(
                     createBar(
@@ -122,6 +142,8 @@ export default function sketch(p) {
                 barsCopy.push(bars[bars.length - 1]);
             }
 
+            // sort the bars array and use it as a template to add animations
+            animation.push({});
             for (let j = 0; j < numBars; j++) {
                 let indexMin = j;
                 animation.push({
@@ -136,7 +158,7 @@ export default function sketch(p) {
                         colorUninspecting: i,
                     });
                     if (bars[i].value < bars[indexMin].value) {
-                        if (indexMin != j) {
+                        if (indexMin !== j) {
                             animation.push({
                                 colorUnindexMin: indexMin,
                             });
@@ -148,7 +170,7 @@ export default function sketch(p) {
                     }
                 }
 
-                if (indexMin != j) {
+                if (indexMin !== j) {
                     animation.push({
                         colorSwap: [j, indexMin],
                     });

@@ -1,8 +1,9 @@
 export default function sketch(p) {
-    let canvas;
+    // let canvas;
 
     p.setup = () => {
-        canvas = p.createCanvas(300, 200);
+        // canvas =
+        p.createCanvas(300, 200);
         p.noStroke();
     };
 
