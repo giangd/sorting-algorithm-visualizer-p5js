@@ -199,7 +199,7 @@ export default function sketch(p) {
         // make groups of 2
         // make groups of 4
         let groupSize = 1;
-        let arrayCopy = [];
+        // let arrayCopy = [];
 
         while (!(groupSize >= array.length)) {
             // console.log(`   begin groupSize: ${groupSize}`);
