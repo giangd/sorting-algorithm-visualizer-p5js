@@ -11,24 +11,37 @@ class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            speed: 1,
+            speed: 20,
             // numBars: 20,
-            numBars: 30,
+            numBars: 40,
             randomArray: [],
             canvasWidth: 300,
             canvasHeight: 200,
             isPlaying: false,
         };
-        // this.randomColor = this.randomColor.bind(this);
     }
 
-    handleChange = (event) => {
+    handleSpeedChange = (event) => {
         this.setState({
-            [event.target.id]: Number(event.target.value),
+            speed: Number(event.target.value),
         });
     };
 
-    handleClick = (event) => {
+    handleNumBarsChange = (event) => {
+        // this.setState(
+        //     {
+        //         numBars: Number(event.target.value),
+        //     },
+        //     this.initializeData
+        // );
+        let newNumBars = Number(event.target.value);
+        // console.log(`   newNumBars: ${newNumBars}`);
+        this.initializeData(newNumBars);
+        // console.log(`size changed to ${Number(event.target.value)}`);
+        // ();
+    };
+
+    handleClick = () => {
         this.setState((prevState) => {
             return {
                 isPlaying: !prevState.isPlaying,
@@ -37,30 +50,59 @@ class App extends React.Component {
     };
 
     componentDidMount() {
+        this.initializeData();
+    }
+
+    initializeData = (newNumBars = undefined) => {
+        // since this function is called when component mounts but also when user changes numBars, have to decide and use the most up-to-date version of numBars
+        let numBars = newNumBars ? newNumBars : this.state.numBars;
+
         const newRandomArray = [];
-        for (let i = 0; i < this.state.numBars; i++) {
+        for (let i = 0; i < numBars; i++) {
             newRandomArray.push(Math.floor(Math.random() * 100));
         }
+
         this.setState((prevState) => {
             return {
                 randomArray: newRandomArray,
+                isPlaying: false,
+                numBars: numBars,
             };
         });
-    }
+    };
 
     render() {
         let buttonText = this.state.isPlaying ? "Pause" : "Play";
         return (
             <div>
-                <input
-                    type="range"
-                    min="1"
-                    max="60"
-                    step="1"
-                    id="speed"
-                    onChange={this.handleChange}
-                    value={this.state.speed}
-                />
+                <div>
+                    <input
+                        type="range"
+                        min="1"
+                        max="100"
+                        step="1"
+                        id="speed"
+                        onChange={this.handleSpeedChange}
+                        value={this.state.speed}
+                    />
+                    <label htmlFor="speed">Speed</label>
+                </div>
+
+                <div>
+                    <label>
+                        Number of bars:
+                        <select
+                            value={this.state.numBars}
+                            onChange={this.handleNumBarsChange}
+                        >
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                    </label>
+                </div>
                 <button onClick={this.handleClick}>{buttonText}</button>
                 <P5Wrapper sketch={sketch} color={this.state.color}></P5Wrapper>
                 <P5Wrapper sketch={bubbleSketch} {...this.state}></P5Wrapper>

@@ -6,6 +6,7 @@ export default function sketch(p) {
         normalColor: "#2B2D42",
         swapColor: "#FE5F55",
         inspectingColor: "#297373",
+        doneColor: "#66ff00",
     };
     let bars = [];
     let barsCopy = [];
@@ -13,10 +14,12 @@ export default function sketch(p) {
     let animation = [];
 
     let randomArray = [];
-    let arrayFilled = false;
+    let dataIsInitialized = false;
 
     let canvasWidth;
     let canvasHeight;
+
+    let frameCount = 0;
 
     p.setup = () => {
         // p.randomSeed(1);
@@ -28,7 +31,7 @@ export default function sketch(p) {
     function stepThroughAnimation(frameCount, bars) {
         if (frameCount >= animation.length || frameCount < 0) {
             for (let i = 0; i < numBars; i++) {
-                bars[i].color = colors.inspectingColor;
+                bars[i].color = colors.doneColor;
                 bars[i].index = i; // always update the bar's index before calling show()
                 bars[i].show();
             }
@@ -75,8 +78,10 @@ export default function sketch(p) {
         // console.log("drew");
         p.background("#BDD5EA");
 
-        if (arrayFilled) {
-            stepThroughAnimation(p.frameCount - 1, barsCopy);
+        if (dataIsInitialized) {
+            stepThroughAnimation(frameCount, barsCopy);
+            frameCount++;
+            // stepThroughAnimation(p.frameCount - 1, barsCopy);
             // for (let i = 0; i < numBars; i++) {
             //     bars[i].index = i; // always update the bar's index before calling show()
             //     bars[i].show();
@@ -99,8 +104,17 @@ export default function sketch(p) {
                 // console.log("pause");
                 p.noLoop();
             }
+            if (props.numBars != numBars) {
+                // console.log(
+                //     `   different numbars detected old: ${numBars} new: ${props.numBars}`
+                // );
+                numBars = props.numBars;
+                dataIsInitialized = false;
+                // console.log(`1 old array: ${randomArray}`);
+                // console.log(`1 new array: ${props.randomArray}`);
+            }
         }
-        if (!arrayFilled && props.randomArray.length > 0) {
+        if (!dataIsInitialized && props.randomArray.length > 0) {
             // runs during componentDidMount
             if (props.isPlaying) {
                 // make sure sketch is in sync with play/pause button at start
@@ -111,11 +125,16 @@ export default function sketch(p) {
                 p.noLoop();
             }
 
+            frameCount = 0;
+            bars = [];
+            barsCopy = [];
+            animation = [];
+
             canvasWidth = props.canvasWidth; // sync local variables
             canvasHeight = props.canvasHeight;
             randomArray = props.randomArray;
             numBars = props.numBars;
-            arrayFilled = true;
+            dataIsInitialized = true;
 
             for (let i = 0; i < numBars; i++) {
                 bars.push(
