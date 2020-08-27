@@ -1,6 +1,6 @@
 export default function createBar(
     p,
-    id,
+    value,
     index,
     numBars,
     color = "black",
@@ -14,18 +14,13 @@ export default function createBar(
     // console.log("hello");
     return {
         p,
-        id,
+        value,
         index,
         numBars,
         color,
-        width: p.round(canvasWidth / numBars),
-        value: id,
-        height: p.round(p.map(id, 0, 100, 40, canvasHeight)),
+        width: Math.floor(canvasWidth / numBars),
+        height: p.round(p.map(value, 0, numBars, 10, canvasHeight)),
         show() {
-            // if (this.value === Infinity) {
-            //     // return;
-            //     console.log("im infinity");
-            // }
             p.noStroke();
             p.fill(this.color);
             p.rect(

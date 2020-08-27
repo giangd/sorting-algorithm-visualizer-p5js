@@ -6,18 +6,23 @@ import quickSketch from "./sketches/quick";
 import insertionSketch from "./sketches/insertion";
 import mergeSketch from "./sketches/merge";
 import selectionSketch from "./sketches/selection";
+import "./App.css";
 
 class App extends React.Component {
     constructor() {
         super();
         this.state = {
+            randomArray: [],
+            nearlySortedArray: [],
+            reversedArray: [],
+            fewSortedArray: [],
             speed: 20,
             // numBars: 20,
-            numBars: 40,
-            randomArray: [],
-            canvasWidth: 300,
-            canvasHeight: 200,
+            numBars: 48,
+            canvasWidth: 144,
+            canvasHeight: 100,
             isPlaying: false,
+            shouldReset: false,
         };
     }
 
@@ -28,17 +33,9 @@ class App extends React.Component {
     };
 
     handleNumBarsChange = (event) => {
-        // this.setState(
-        //     {
-        //         numBars: Number(event.target.value),
-        //     },
-        //     this.initializeData
-        // );
         let newNumBars = Number(event.target.value);
-        // console.log(`   newNumBars: ${newNumBars}`);
         this.initializeData(newNumBars);
-        // console.log(`size changed to ${Number(event.target.value)}`);
-        // ();
+        this.setState({ isPlaying: true });
     };
 
     handleClick = () => {
@@ -49,6 +46,20 @@ class App extends React.Component {
         });
     };
 
+    handleReset = () => {
+        this.setState(
+            {
+                shouldReset: true,
+                isPlaying: true,
+            },
+            () => {
+                this.setState({
+                    shouldReset: false,
+                });
+            }
+        );
+    };
+
     componentDidMount() {
         this.initializeData();
     }
@@ -57,24 +68,79 @@ class App extends React.Component {
         // since this function is called when component mounts but also when user changes numBars, have to decide and use the most up-to-date version of numBars
         let numBars = newNumBars ? newNumBars : this.state.numBars;
 
-        const newRandomArray = [];
+        const randomArray = [];
+        const nearlySortedArray = [];
+        const reversedArray = [];
         for (let i = 0; i < numBars; i++) {
-            newRandomArray.push(Math.floor(Math.random() * 100));
+            randomArray.push(Math.random() * numBars);
+            nearlySortedArray[i] = randomArray[i];
+            reversedArray[i] = randomArray[i];
         }
 
-        this.setState((prevState) => {
-            return {
-                randomArray: newRandomArray,
-                isPlaying: false,
-                numBars: numBars,
-            };
+        nearlySortedArray.sort((a, b) => a - b);
+        for (let i = 0; i < numBars / 5; i++) {
+            let i1 = Math.floor(Math.random() * numBars);
+            let i2 = Math.floor(Math.random() * numBars);
+            [nearlySortedArray[i1], nearlySortedArray[i2]] = [
+                nearlySortedArray[i2],
+                nearlySortedArray[i1],
+            ];
+        }
+
+        reversedArray.sort((a, b) => b - a);
+
+        const fewSortedArray = [];
+        const groupSize = 5;
+        for (let i = 0; i < Math.ceil(numBars / groupSize); i++) {
+            let repeatedValue = Math.random() * numBars;
+            for (let j = 0; j < groupSize; j++) {
+                fewSortedArray.push(repeatedValue);
+            }
+        }
+
+        // todo: test fewSortedArrays
+
+        console.log(fewSortedArray);
+        console.log(
+            randomArray.length,
+            nearlySortedArray.length,
+            reversedArray.length,
+            fewSortedArray
+        );
+
+        this.setState({
+            randomArray: randomArray,
+            nearlySortedArray: nearlySortedArray,
+            reversedArray: reversedArray,
+            fewSortedArray: fewSortedArray,
+            // isPlaying: true,
+            numBars: numBars,
         });
     };
 
     render() {
+        const {
+            randomArray,
+            nearlySortedArray,
+            reversedArray,
+            fewSortedArray,
+            ...data
+        } = this.state;
+        // console.log(`randomArray: ${randomArray} data: ${data}`);
+        // console.log(data);
         let buttonText = this.state.isPlaying ? "Pause" : "Play";
+        
+
+        let appStyle = {
+            backgroundColor: "rgb(240,240,240)",
+        };
+
+        // console.log(
+        //     `width: ${this.state.canvasWidth} type: ${typeof this.state
+        //         .canvasWidth}`
+        // );
         return (
-            <div>
+            <div style={appStyle}>
                 <div>
                     <input
                         type="range"
@@ -95,21 +161,123 @@ class App extends React.Component {
                             value={this.state.numBars}
                             onChange={this.handleNumBarsChange}
                         >
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
+                            <option value="12">12</option>
+                            <option value="24">24</option>
+                            <option value="48">48</option>
+                            <option value="72">72</option>
+                            <option value="144">144</option>
                         </select>
                     </label>
                 </div>
                 <button onClick={this.handleClick}>{buttonText}</button>
-                <P5Wrapper sketch={sketch} color={this.state.color}></P5Wrapper>
-                <P5Wrapper sketch={bubbleSketch} {...this.state}></P5Wrapper>
-                <P5Wrapper sketch={insertionSketch} {...this.state}></P5Wrapper>
-                <P5Wrapper sketch={mergeSketch} {...this.state}></P5Wrapper>
-                <P5Wrapper sketch={quickSketch} {...this.state}></P5Wrapper>
-                <P5Wrapper sketch={selectionSketch} {...this.state}></P5Wrapper>
+                <button onClick={this.handleReset}>Reset</button>
+
+                {/* <P5Wrapper sketch={sketch} color={this.state.color}></P5Wrapper> */}
+                <div className="grid-container">
+                    <P5Wrapper
+                        sketch={bubbleSketch}
+                        array={randomArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={insertionSketch}
+                        array={randomArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={mergeSketch}
+                        array={randomArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={quickSketch}
+                        array={randomArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={selectionSketch}
+                        array={randomArray}
+                        {...data}
+                    ></P5Wrapper>
+
+                    <P5Wrapper
+                        sketch={bubbleSketch}
+                        array={nearlySortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={insertionSketch}
+                        array={nearlySortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={mergeSketch}
+                        array={nearlySortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={quickSketch}
+                        array={nearlySortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={selectionSketch}
+                        array={nearlySortedArray}
+                        {...data}
+                    ></P5Wrapper>
+
+                    <P5Wrapper
+                        sketch={bubbleSketch}
+                        array={reversedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={insertionSketch}
+                        array={reversedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={mergeSketch}
+                        array={reversedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={quickSketch}
+                        array={reversedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={selectionSketch}
+                        array={reversedArray}
+                        {...data}
+                    ></P5Wrapper>
+
+                    <P5Wrapper
+                        sketch={bubbleSketch}
+                        array={fewSortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={insertionSketch}
+                        array={fewSortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={mergeSketch}
+                        array={fewSortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={quickSketch}
+                        array={fewSortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                    <P5Wrapper
+                        sketch={selectionSketch}
+                        array={fewSortedArray}
+                        {...data}
+                    ></P5Wrapper>
+                </div>
             </div>
         );
     }

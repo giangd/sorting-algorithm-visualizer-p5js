@@ -1,0 +1,15 @@
+/* .grid-container > div {
+    border: 1px solid black;
+}
+ */
+.grid-container {
+    background-color: rgb(240, 240, 240);
+    display: grid;
+    grid-template-columns: repeat(4, 144px) 145px;
+    grid-auto-rows: 101px;
+    grid-gap: 5px;
+}
+
+canvas {
+    border: 5px solid pink;
+}

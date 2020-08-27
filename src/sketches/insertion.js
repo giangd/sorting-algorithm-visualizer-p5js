@@ -21,6 +21,9 @@ export default function sketch(p) {
 
     let frameCount = 0;
 
+    let drawOnce = false;
+
+
     p.setup = () => {
         // p.randomSeed(1);
         canvas = p.createCanvas(canvasWidth, canvasHeight);
@@ -90,6 +93,11 @@ export default function sketch(p) {
         p.textSize(10);
         p.fill(0);
         p.text(p.round(p.getFrameRate()), 5, 10);
+
+        if (drawOnce) {
+            p.noLoop();
+            drawOnce = false;
+        }
     };
 
     p.myCustomRedrawAccordingToNewPropsHandler = (props) => {
@@ -104,26 +112,21 @@ export default function sketch(p) {
                 // console.log("pause");
                 p.noLoop();
             }
-            if (props.numBars != numBars) {
+            if (props.numBars !== numBars || props.shouldReset === true) {
+
                 // console.log(
                 //     `   different numbars detected old: ${numBars} new: ${props.numBars}`
                 // );
                 numBars = props.numBars;
                 dataIsInitialized = false;
+
                 // console.log(`1 old array: ${randomArray}`);
-                // console.log(`1 new array: ${props.randomArray}`);
+                // console.log(`1 new array: ${props.array}`);
             }
         }
-        if (!dataIsInitialized && props.randomArray.length > 0) {
+        if (!dataIsInitialized && props.array.length > 0) {
             // runs during componentDidMount
-            if (props.isPlaying) {
-                // make sure sketch is in sync with play/pause button at start
-                // console.log("play");
-                p.loop();
-            } else {
-                // console.log("pause");
-                p.noLoop();
-            }
+
 
             frameCount = 0;
             bars = [];
@@ -132,7 +135,7 @@ export default function sketch(p) {
 
             canvasWidth = props.canvasWidth; // sync local variables
             canvasHeight = props.canvasHeight;
-            randomArray = props.randomArray;
+            randomArray = props.array;
             numBars = props.numBars;
             dataIsInitialized = true;
 
@@ -174,6 +177,16 @@ export default function sketch(p) {
                 animation.push({
                     colorUninspecting: j,
                 });
+            }
+
+            if (props.isPlaying) {
+                // make sure sketch is in sync with play/pause button at start
+                // console.log("play");
+                p.loop();
+            } else {
+                // console.log("pause");
+                drawOnce = true;
+                p.loop();
             }
 
             // sort the bars array and use it as a template to add animations
