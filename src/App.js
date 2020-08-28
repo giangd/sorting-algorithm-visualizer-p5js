@@ -6,6 +6,10 @@ import quickSketch from "./sketches/quick";
 import insertionSketch from "./sketches/insertion";
 import mergeSketch from "./sketches/merge";
 import selectionSketch from "./sketches/selection";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+
+import "./custom.scss";
 import "./App.css";
 
 class App extends React.Component {
@@ -128,36 +132,51 @@ class App extends React.Component {
         } = this.state;
         // console.log(`randomArray: ${randomArray} data: ${data}`);
         // console.log(data);
-        let buttonText = this.state.isPlaying ? "Pause" : "Play";
-        
-
-        let appStyle = {
-            backgroundColor: "rgb(240,240,240)",
-        };
+        let playButtonText = this.state.isPlaying ? "Pause" : "Play";
+        let playButtonVariant = this.state.isPlaying ? "warning" : "success";
 
         // console.log(
         //     `width: ${this.state.canvasWidth} type: ${typeof this.state
         //         .canvasWidth}`
         // );
         return (
-            <div style={appStyle}>
-                <div>
-                    <input
-                        type="range"
-                        min="1"
-                        max="100"
-                        step="1"
-                        id="speed"
-                        onChange={this.handleSpeedChange}
-                        value={this.state.speed}
-                    />
-                    <label htmlFor="speed">Speed</label>
-                </div>
+            <div className="app">
+                <div className="controls">
+                    {/* <button onClick={this.handleClick}>{buttonText}</button> */}
+                    <div className="buttons">
+                        <Button
+                            className="play-button"
+                            variant={playButtonVariant}
+                            onClick={this.handleClick}
+                        >
+                            {playButtonText}
+                        </Button>
+                        <Button
+                            className="reset-button"
+                            onClick={this.handleReset}
+                            variant="secondary"
+                        >
+                            Reset
+                        </Button>
+                    </div>
 
-                <div>
-                    <label>
-                        Number of bars:
-                        <select
+                    <div className="speed-controls">
+                        <Form.Label>Speed</Form.Label>
+                        <Form.Control
+                            type="range"
+                            min="1"
+                            max="100"
+                            step="1"
+                            id="speed"
+                            onChange={this.handleSpeedChange}
+                            value={this.state.speed}
+                        />
+                    </div>
+
+                    <div className="num-bar-controls">
+                        <Form.Label>Number of Bars</Form.Label>
+                        <Form.Control
+                            as="select"
                             value={this.state.numBars}
                             onChange={this.handleNumBarsChange}
                         >
@@ -166,14 +185,22 @@ class App extends React.Component {
                             <option value="48">48</option>
                             <option value="72">72</option>
                             <option value="144">144</option>
-                        </select>
-                    </label>
+                        </Form.Control>
+                    </div>
                 </div>
-                <button onClick={this.handleClick}>{buttonText}</button>
-                <button onClick={this.handleReset}>Reset</button>
 
                 {/* <P5Wrapper sketch={sketch} color={this.state.color}></P5Wrapper> */}
                 <div className="grid-container">
+                    {/* 1st row */}
+                    <div></div>
+                    <p className="sort-name">Bubble</p>
+                    <p className="sort-name">Insertion</p>
+                    <p className="sort-name">Merge</p>
+                    <p className="sort-name">Quick</p>
+                    <p className="sort-name">Selection</p>
+
+                    {/* 2nd row */}
+                    <p className="array-name">Random</p>
                     <P5Wrapper
                         sketch={bubbleSketch}
                         array={randomArray}
@@ -200,6 +227,8 @@ class App extends React.Component {
                         {...data}
                     ></P5Wrapper>
 
+                    {/* 3rd row */}
+                    <p className="array-name">Almost Sorted</p>
                     <P5Wrapper
                         sketch={bubbleSketch}
                         array={nearlySortedArray}
@@ -226,6 +255,8 @@ class App extends React.Component {
                         {...data}
                     ></P5Wrapper>
 
+                    {/* 4th row */}
+                    <p className="array-name">Reversed</p>
                     <P5Wrapper
                         sketch={bubbleSketch}
                         array={reversedArray}
@@ -252,6 +283,8 @@ class App extends React.Component {
                         {...data}
                     ></P5Wrapper>
 
+                    {/* 5th row */}
+                    <p className="array-name">Many Similar</p>
                     <P5Wrapper
                         sketch={bubbleSketch}
                         array={fewSortedArray}
@@ -284,3 +317,4 @@ class App extends React.Component {
 }
 
 export default App;
+// 1920-890-126-180
