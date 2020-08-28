@@ -1,25 +1,35 @@
 .app {
-    background-color: white;
     /* margin: auto; */
     /* width: 99%; */
     /* height: 100vh; */
+    text-align: center;
+}
+
+body {
+    background-color: #fff6f8;
+}
+
+.headline {
+    /* background-color: black; */
+    /* font-weight: bold; */
+    position: relative;
+    margin-top: 35px;
+    /* margin-left: -140px; */
 }
 
 .grid-container {
     /* background-color: rgb(240, 240, 240); */
     display: grid;
-    grid-template-columns: repeat(5, 144px) 145px;
-    grid-auto-rows: 101px;
-    grid-gap: 5px;
+    grid-template-columns: repeat(5, 160px) 161px;
+    grid-auto-rows: 121px;
+    grid-gap: 10px;
     float: left;
+    margin-left: 100px;
+    margin-top: -30px;
 }
 
 .grid-container > p {
     text-align: center;
-}
-
-canvas {
-    border: 5px solid pink;
 }
 
 p {
@@ -28,24 +38,29 @@ p {
 
 .sort-name {
     position: relative;
-    top: 70px;
+    top: 90px;
 }
 
 .array-name {
     position: relative;
-    text-align: center;
     top: 36px;
-    /* left: 20px; */
+    left: 20px;
 }
 
 .controls {
     float: right;
+    width: 135px;
     position: relative;
-    margin-right: calc((100vw - 890px - 180px) / 2);
+    /* margin-right: calc((1519px - 1101px - 135px) / 2); */
+    /* margin-right: calc((100vw - 1101px) / 2 - (135px / 2)); */
+    /* margin-right: calc(((100vw - 1101px) / 2) - (135px / 2)); */
+    margin-right: calc((100vw - (1011px + 100px)) / 2 - 135px / 2);
+    /* (1519-1101-135)/2 */
+    margin-top: calc(140px + 126px);
 }
 
 .controls > * {
-    margin: 0px 30px 30px 0px;
+    margin: 0px 0px 35px 0px;
 }
 
 .buttons {

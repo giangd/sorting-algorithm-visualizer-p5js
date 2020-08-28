@@ -4,9 +4,11 @@ export default function sketch(p) {
     let canvas;
     const colors = {
         normalColor: "#2B2D42",
-        swapColor: "#FE5F55",
+        swapColor: "#ff851b",
         inspectingColor: "#297373",
-        doneColor: "#66ff00"
+        doneColor: "#219724",
+
+        backgroundColor: "#fff6f8",
 
     };
     let bars = [];
@@ -102,7 +104,8 @@ export default function sketch(p) {
 
     p.draw = () => {
         // console.log("drew");
-        p.background("#BDD5EA");
+        p.background(colors.backgroundColor);
+
 
         if (dataIsInitialized) {
             stepThroughAnimation(frameCount, barsCopy);
@@ -113,9 +116,9 @@ export default function sketch(p) {
             // bars[i].show();
             // }
         }
-        p.textSize(10);
-        p.fill(0);
-        p.text(p.round(p.getFrameRate()), 5, 10);
+        // p.textSize(10);
+        // p.fill(0);
+        // p.text(p.round(p.getFrameRate()), 5, 10);
 
         if (drawOnce) {
             p.noLoop();

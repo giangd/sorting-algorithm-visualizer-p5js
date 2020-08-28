@@ -22,9 +22,9 @@ class App extends React.Component {
             fewSortedArray: [],
             speed: 20,
             // numBars: 20,
-            numBars: 48,
-            canvasWidth: 144,
-            canvasHeight: 100,
+            numBars: 40,
+            canvasWidth: 160,
+            canvasHeight: 120,
             isPlaying: false,
             shouldReset: false,
         };
@@ -139,8 +139,10 @@ class App extends React.Component {
         //     `width: ${this.state.canvasWidth} type: ${typeof this.state
         //         .canvasWidth}`
         // );
+        console.log(window.innerWidth);
         return (
             <div className="app">
+                <h1 className="headline">Sorting Algorithm Visualizer</h1>
                 <div className="controls">
                     {/* <button onClick={this.handleClick}>{buttonText}</button> */}
                     <div className="buttons">
@@ -180,11 +182,11 @@ class App extends React.Component {
                             value={this.state.numBars}
                             onChange={this.handleNumBarsChange}
                         >
-                            <option value="12">12</option>
-                            <option value="24">24</option>
-                            <option value="48">48</option>
-                            <option value="72">72</option>
-                            <option value="144">144</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="40">40</option>
+                            <option value="80">80</option>
+                            <option value="160">160</option>
                         </Form.Control>
                     </div>
                 </div>

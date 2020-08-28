@@ -4,9 +4,11 @@ export default function sketch(p) {
     let canvas;
     const colors = {
         normalColor: "#2B2D42",
-        swapColor: "#FE5F55",
+        swapColor: "#ff851b",
         inspectingColor: "#297373",
-        doneColor: "#66ff00",
+        doneColor: "#219724",
+
+        backgroundColor: "#fff6f8",
     };
     let bars = [];
     let barsCopy = [];
@@ -22,7 +24,6 @@ export default function sketch(p) {
     let frameCount = 0;
 
     let drawOnce = false;
-
 
     p.setup = () => {
         // p.randomSeed(1);
@@ -79,7 +80,7 @@ export default function sketch(p) {
 
     p.draw = () => {
         // console.log("drew");
-        p.background("#BDD5EA");
+        p.background(colors.backgroundColor);
 
         if (dataIsInitialized) {
             stepThroughAnimation(frameCount, barsCopy);
@@ -90,9 +91,9 @@ export default function sketch(p) {
             //     bars[i].show();
             // }
         }
-        p.textSize(10);
-        p.fill(0);
-        p.text(p.round(p.getFrameRate()), 5, 10);
+        // p.textSize(10);
+        // p.fill(0);
+        // p.text(p.round(p.getFrameRate()), 5, 10);
 
         if (drawOnce) {
             p.noLoop();
@@ -113,7 +114,6 @@ export default function sketch(p) {
                 p.noLoop();
             }
             if (props.numBars !== numBars || props.shouldReset === true) {
-
                 // console.log(
                 //     `   different numbars detected old: ${numBars} new: ${props.numBars}`
                 // );
@@ -126,7 +126,6 @@ export default function sketch(p) {
         }
         if (!dataIsInitialized && props.array.length > 0) {
             // runs during componentDidMount
-
 
             frameCount = 0;
             bars = [];
