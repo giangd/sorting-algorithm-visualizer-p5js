@@ -1,16 +1,16 @@
 import React from "react";
-import P5Wrapper from "react-p5-wrapper";
-import sketch from "./sketches/sketch";
-import bubbleSketch from "./sketches/bubble";
-import quickSketch from "./sketches/quick";
-import insertionSketch from "./sketches/insertion";
-import mergeSketch from "./sketches/merge";
-import selectionSketch from "./sketches/selection";
+
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 import "./custom.scss";
 import "./App.css";
+
+import Controls from "./components/Controls";
+import Graphs from "./components/Graphs";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
 
 class App extends React.Component {
     constructor() {
@@ -21,7 +21,6 @@ class App extends React.Component {
             reversedArray: [],
             fewSortedArray: [],
             speed: 20,
-            // numBars: 20,
             numBars: 40,
             canvasWidth: 160,
             canvasHeight: 120,
@@ -102,15 +101,13 @@ class App extends React.Component {
             }
         }
 
-        // todo: test fewSortedArrays
-
-        console.log(fewSortedArray);
-        console.log(
-            randomArray.length,
-            nearlySortedArray.length,
-            reversedArray.length,
-            fewSortedArray
-        );
+        // console.log(fewSortedArray);
+        // console.log(
+        //     randomArray.length,
+        //     nearlySortedArray.length,
+        //     reversedArray.length,
+        //     fewSortedArray
+        // );
 
         this.setState({
             randomArray: randomArray,
@@ -123,200 +120,24 @@ class App extends React.Component {
     };
 
     render() {
-        const {
-            randomArray,
-            nearlySortedArray,
-            reversedArray,
-            fewSortedArray,
-            ...data
-        } = this.state;
-        // console.log(`randomArray: ${randomArray} data: ${data}`);
-        // console.log(data);
-        let playButtonText = this.state.isPlaying ? "Pause" : "Play";
-        let playButtonVariant = this.state.isPlaying ? "warning" : "success";
+        const controlProps = {
+            handleClick: this.handleClick,
+            handleReset: this.handleReset,
+            handleSpeedChange: this.handleSpeedChange,
+            handleNumBarsChange: this.handleNumBarsChange,
+            isPlaying: this.state.isPlaying,
+            speed: this.state.speed,
+            numBars: this.state.numBars,
+        };
 
-        // console.log(
-        //     `width: ${this.state.canvasWidth} type: ${typeof this.state
-        //         .canvasWidth}`
-        // );
-        console.log(window.innerWidth);
         return (
             <div className="app">
                 <h1 className="headline">Sorting Algorithm Visualizer</h1>
-                <div className="controls">
-                    {/* <button onClick={this.handleClick}>{buttonText}</button> */}
-                    <div className="buttons">
-                        <Button
-                            className="play-button"
-                            variant={playButtonVariant}
-                            onClick={this.handleClick}
-                        >
-                            {playButtonText}
-                        </Button>
-                        <Button
-                            className="reset-button"
-                            onClick={this.handleReset}
-                            variant="secondary"
-                        >
-                            Reset
-                        </Button>
-                    </div>
-
-                    <div className="speed-controls">
-                        <Form.Label>Speed</Form.Label>
-                        <Form.Control
-                            type="range"
-                            min="1"
-                            max="100"
-                            step="1"
-                            id="speed"
-                            onChange={this.handleSpeedChange}
-                            value={this.state.speed}
-                        />
-                    </div>
-
-                    <div className="num-bar-controls">
-                        <Form.Label>Number of Bars</Form.Label>
-                        <Form.Control
-                            as="select"
-                            value={this.state.numBars}
-                            onChange={this.handleNumBarsChange}
-                        >
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="40">40</option>
-                            <option value="80">80</option>
-                            <option value="160">160</option>
-                        </Form.Control>
-                    </div>
-                </div>
-
-                {/* <P5Wrapper sketch={sketch} color={this.state.color}></P5Wrapper> */}
-                <div className="grid-container">
-                    {/* 1st row */}
-                    <div></div>
-                    <p className="sort-name">Bubble</p>
-                    <p className="sort-name">Insertion</p>
-                    <p className="sort-name">Merge</p>
-                    <p className="sort-name">Quick</p>
-                    <p className="sort-name">Selection</p>
-
-                    {/* 2nd row */}
-                    <p className="array-name">Random</p>
-                    <P5Wrapper
-                        sketch={bubbleSketch}
-                        array={randomArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={insertionSketch}
-                        array={randomArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={mergeSketch}
-                        array={randomArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={quickSketch}
-                        array={randomArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={selectionSketch}
-                        array={randomArray}
-                        {...data}
-                    ></P5Wrapper>
-
-                    {/* 3rd row */}
-                    <p className="array-name">Almost Sorted</p>
-                    <P5Wrapper
-                        sketch={bubbleSketch}
-                        array={nearlySortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={insertionSketch}
-                        array={nearlySortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={mergeSketch}
-                        array={nearlySortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={quickSketch}
-                        array={nearlySortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={selectionSketch}
-                        array={nearlySortedArray}
-                        {...data}
-                    ></P5Wrapper>
-
-                    {/* 4th row */}
-                    <p className="array-name">Reversed</p>
-                    <P5Wrapper
-                        sketch={bubbleSketch}
-                        array={reversedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={insertionSketch}
-                        array={reversedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={mergeSketch}
-                        array={reversedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={quickSketch}
-                        array={reversedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={selectionSketch}
-                        array={reversedArray}
-                        {...data}
-                    ></P5Wrapper>
-
-                    {/* 5th row */}
-                    <p className="array-name">Many Similar</p>
-                    <P5Wrapper
-                        sketch={bubbleSketch}
-                        array={fewSortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={insertionSketch}
-                        array={fewSortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={mergeSketch}
-                        array={fewSortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={quickSketch}
-                        array={fewSortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                    <P5Wrapper
-                        sketch={selectionSketch}
-                        array={fewSortedArray}
-                        {...data}
-                    ></P5Wrapper>
-                </div>
+                <Graphs {...this.state}></Graphs>
+                <Controls {...controlProps}></Controls>
             </div>
         );
     }
 }
 
 export default App;
-// 1920-890-126-180
